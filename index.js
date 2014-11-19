@@ -65,6 +65,7 @@ var TangleTextCompat = React.createClass({
           className={this.props.className}
           disabled={this.props.disabled}
           type='number'
+          step={this.props.step}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           onInput={this.onInput}
