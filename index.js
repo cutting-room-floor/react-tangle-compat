@@ -17,7 +17,6 @@ var TangleTextCompat = React.createClass({
       min: -Infinity,
       max: Infinity,
       step: 1,
-      metaStep: 10,
       className: 'react-tangle-input',
       format: function(x) { return x; },
       onInput: function() { }
@@ -62,7 +61,7 @@ var TangleTextCompat = React.createClass({
     } else if (e.which == 16) {
       // SHIFT + arrows
       e.target.setAttribute("value", this.state.value);
-      this.setState({ step: this.props.metaStep })
+      this.setState({ step: this.props.metaStep || 10 * this.props.step })
     }
   },
   onKeyUp: function(e) {
