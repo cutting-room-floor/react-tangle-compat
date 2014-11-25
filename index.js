@@ -7,6 +7,7 @@ var TangleTextCompat = React.createClass({
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     step: React.PropTypes.number,
+    metaStep: React.PropTypes.number,
     className: React.PropTypes.string,
     onInput: React.PropTypes.func,
     format: React.PropTypes.func,
@@ -16,6 +17,7 @@ var TangleTextCompat = React.createClass({
       min: -Infinity,
       max: Infinity,
       step: 1,
+      metaStep: 10,
       className: 'react-tangle-input',
       format: function(x) { return x; },
       onInput: function() { }
@@ -25,7 +27,10 @@ var TangleTextCompat = React.createClass({
     this.setState({ value: nextProps.value });
   },
   getInitialState: function() {
-    return { value: this.props.value };
+    return {
+      value: this.props.value,
+      step: this.props.step
+    };
   },
   bounds: function(num) {
     num = Math.max(num, this.props.min);
@@ -50,11 +55,24 @@ var TangleTextCompat = React.createClass({
     }
   },
   onKeyDown: function(e) {
-    var value;
     if (e.which == 13) {
       // ENTER
       this.onBlur(e);
       e.target.blur();
+    } else if (e.which == 16) {
+      // SHIFT + arrows
+      e.target.setAttribute("value", this.state.value);
+      this.setState({ step: this.props.metaStep })
+    }
+  },
+  onKeyUp: function(e) {
+    if (e.which == 16) {
+      // Reset to default step
+      e.target.setAttribute("value", this.state.value);
+      this.setState({ step: this.props.step });
+    } else if (e.which == 38 || e.which == 40) {
+      // Constrain arrow up/down to bounds
+      this.onBlur();
     }
   },
   render: function() {
@@ -65,9 +83,10 @@ var TangleTextCompat = React.createClass({
           className={this.props.className}
           disabled={this.props.disabled}
           type='number'
-          step={this.props.step}
+          step={this.state.step}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
+          onKeyUp={this.onKeyUp}
           onInput={this.onInput}
           onBlur={this.onBlur}
           value={this.props.format(this.state.value)} />
