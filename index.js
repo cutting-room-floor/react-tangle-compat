@@ -60,15 +60,18 @@ var TangleTextCompat = React.createClass({
       this.onBlur(e);
       e.target.blur();
     } else if (e.which == 16) {
+      // SHIFT + arrows
       e.target.setAttribute("value", this.state.value);
       this.setState({ step: this.props.metaStep })
     }
   },
   onKeyUp: function(e) {
     if (e.which == 16) {
+      // Reset to default step
       e.target.setAttribute("value", this.state.value);
       this.setState({ step: this.props.step });
     } else if (e.which == 38 || e.which == 40) {
+      // Constrain arrow up/down to bounds
       this.onBlur();
     }
   },
