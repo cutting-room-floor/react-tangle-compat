@@ -75,9 +75,6 @@ var TangleTextCompat = React.createClass({
       this.onBlur();
     }
   },
-  step: function() {
-    return this.state.step;
-  },
   render: function() {
     /* jshint ignore:start */
     return (
@@ -86,7 +83,7 @@ var TangleTextCompat = React.createClass({
           className={this.props.className}
           disabled={this.props.disabled}
           type='number'
-          step={this.step()}
+          step={this.state.step}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           onKeyUp={this.onKeyUp}
