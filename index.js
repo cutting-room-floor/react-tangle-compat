@@ -4,6 +4,8 @@ var TangleTextCompat = React.createClass({
   propTypes: {
     value: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
+    onFocus: React.PropTypes.func,
+    popoverKey: React.PropTypes.string,
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     step: React.PropTypes.number,
@@ -87,7 +89,9 @@ var TangleTextCompat = React.createClass({
           onKeyDown={this.onKeyDown}
           onKeyUp={this.onKeyUp}
           onInput={this.onInput}
+          onFocus={this.props.onFocus && this.props.onFocus}
           onBlur={this.onBlur}
+          data-popover={this.props.popoverKey}
           value={this.props.format(this.state.value)} />
       </div>
     );
