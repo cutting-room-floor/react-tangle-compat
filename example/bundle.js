@@ -5,17 +5,14 @@ var TangleText = require('../'),
 
 var Example = React.createClass({displayName: 'Example',
   getInitialState: function() {
-    return { value: 0, valueTwo: 0 };
+    return { value1: 0, value2: 0 };
   },
-  onChange: function(value) {
-    console.log('onChange one', value);
-    this.setState({ value: value });
+  onChange1: function(value) {
+      console.log(value);
+    this.setState({ value1: value });
   },
-  onInput: function(value) {
-    console.log('onInput one', value);
-  },
-  onChangeTwo: function(value) {
-    this.setState({ valueTwo: value });
+  onChange2: function(value) {
+    this.setState({ value2: value });
   },
   render: function() {
     /* jshint ignore:start */
@@ -23,8 +20,8 @@ var Example = React.createClass({displayName: 'Example',
       React.createElement("div", null, 
         React.createElement("div", {className: "clearfix pad1 keyline-bottom"}, 
           React.createElement("div", {className: "col4"}, 
-            React.createElement(TangleText, {value: this.state.valueTwo, onInput: this.onInput, onChange: this.onChangeTwo}), 
-            React.createElement(TangleText, {value: this.state.value, onChange: this.onChange, 
+            React.createElement(TangleText, {value: this.state.value1, onChange: this.onChange1}), 
+            React.createElement(TangleText, {value: this.state.value2, onChange: this.onChange2, 
               min: 0, max: 1, step: 0.02})
           ), 
           React.createElement("div", {className: "col8"}, 
@@ -44,14 +41,19 @@ var React = require('react');
 
 var TangleTextCompat = React.createClass({displayName: 'TangleTextCompat',
   propTypes: {
-    value: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
+    value: React.PropTypes.number.isRequired,
+
+    onFocus: React.PropTypes.func,
+    format: React.PropTypes.func,
+
+    popoverKey: React.PropTypes.string,
+    className: React.PropTypes.string,
+
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     step: React.PropTypes.number,
-    className: React.PropTypes.string,
-    onInput: React.PropTypes.func,
-    format: React.PropTypes.func,
+    metaStep: React.PropTypes.number
   },
   getDefaultProps: function() {
     return {
@@ -60,14 +62,17 @@ var TangleTextCompat = React.createClass({displayName: 'TangleTextCompat',
       step: 1,
       className: 'react-tangle-input',
       format: function(x) { return x; },
-      onInput: function() { }
+      onFocus: function(x) { }
     };
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({ value: nextProps.value });
   },
   getInitialState: function() {
-    return { value: this.props.value };
+    return {
+      value: this.props.value,
+      step: this.props.step
+    };
   },
   bounds: function(num) {
     num = Math.max(num, this.props.min);
@@ -75,12 +80,11 @@ var TangleTextCompat = React.createClass({displayName: 'TangleTextCompat',
     return num;
   },
   onChange: function(e) {
-    this.props.onInput(e.target.value);
     this.setState({ value: e.target.value });
-  },
-  onInput: function(e) {
-    this.props.onInput(e.target.value);
-    this.setState({ value: e.target.value });
+    var parsed = parseFloat(e.target.value);
+    if (!isNaN(parsed)) {
+      this.props.onChange(parsed);
+    }
   },
   onBlur: function(e) {
     var parsed = parseFloat(this.state.value);
@@ -92,11 +96,22 @@ var TangleTextCompat = React.createClass({displayName: 'TangleTextCompat',
     }
   },
   onKeyDown: function(e) {
-    var value;
     if (e.which == 13) {
       // ENTER
       this.onBlur(e);
       e.target.blur();
+    } else if (e.which == 16) {
+      // SHIFT + arrows
+      this.setState({ step: this.props.metaStep || 10 * this.props.step });
+    }
+  },
+  onKeyUp: function(e) {
+    if (e.which == 16) {
+      // Reset to default step
+      this.setState({ step: this.props.step });
+    } else if (e.which == 38 || e.which == 40) {
+      // Constrain arrow up/down to bounds
+      this.onBlur();
     }
   },
   render: function() {
@@ -107,10 +122,13 @@ var TangleTextCompat = React.createClass({displayName: 'TangleTextCompat',
           className: this.props.className, 
           disabled: this.props.disabled, 
           type: "number", 
+          step: this.state.step, 
           onChange: this.onChange, 
           onKeyDown: this.onKeyDown, 
-          onInput: this.onInput, 
+          onKeyUp: this.onKeyUp, 
+          onFocus: this.props.onFocus, 
           onBlur: this.onBlur, 
+          'data-popover': this.props.popoverKey, 
           value: this.props.format(this.state.value)})
       )
     );

@@ -15,7 +15,6 @@ A [tangle.js](http://worrydream.com/Tangle/)-style numeric input for React.js.
 **optional**
 
 ```
-onInput={function}
 onFocus={function}
 popoverKey={string}
 className={string, default 'react-tangle-input'}

@@ -2,17 +2,19 @@ var React = require('react');
 
 var TangleTextCompat = React.createClass({
   propTypes: {
-    value: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
+    value: React.PropTypes.number.isRequired,
+
     onFocus: React.PropTypes.func,
+    format: React.PropTypes.func,
+
     popoverKey: React.PropTypes.string,
+    className: React.PropTypes.string,
+
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     step: React.PropTypes.number,
-    metaStep: React.PropTypes.number,
-    className: React.PropTypes.string,
-    onInput: React.PropTypes.func,
-    format: React.PropTypes.func,
+    metaStep: React.PropTypes.number
   },
   getDefaultProps: function() {
     return {
@@ -21,7 +23,7 @@ var TangleTextCompat = React.createClass({
       step: 1,
       className: 'react-tangle-input',
       format: function(x) { return x; },
-      onInput: function() { }
+      onFocus: function(x) { }
     };
   },
   componentWillReceiveProps: function(nextProps) {
@@ -39,12 +41,11 @@ var TangleTextCompat = React.createClass({
     return num;
   },
   onChange: function(e) {
-    this.props.onInput(e.target.value);
     this.setState({ value: e.target.value });
-  },
-  onInput: function(e) {
-    this.props.onInput(e.target.value);
-    this.setState({ value: e.target.value });
+    var parsed = parseFloat(e.target.value);
+    if (!isNaN(parsed)) {
+      this.props.onChange(parsed);
+    }
   },
   onBlur: function(e) {
     var parsed = parseFloat(this.state.value);
@@ -62,14 +63,12 @@ var TangleTextCompat = React.createClass({
       e.target.blur();
     } else if (e.which == 16) {
       // SHIFT + arrows
-      e.target.setAttribute("value", this.state.value);
-      this.setState({ step: this.props.metaStep || 10 * this.props.step })
+      this.setState({ step: this.props.metaStep || 10 * this.props.step });
     }
   },
   onKeyUp: function(e) {
     if (e.which == 16) {
       // Reset to default step
-      e.target.setAttribute("value", this.state.value);
       this.setState({ step: this.props.step });
     } else if (e.which == 38 || e.which == 40) {
       // Constrain arrow up/down to bounds
@@ -88,8 +87,7 @@ var TangleTextCompat = React.createClass({
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           onKeyUp={this.onKeyUp}
-          onInput={this.onInput}
-          onFocus={this.props.onFocus && this.props.onFocus}
+          onFocus={this.props.onFocus}
           onBlur={this.onBlur}
           data-popover={this.props.popoverKey}
           value={this.props.format(this.state.value)} />

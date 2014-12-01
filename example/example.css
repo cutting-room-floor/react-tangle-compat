@@ -6,7 +6,7 @@
   font:inherit;
   border-bottom:2px dotted #000;
   display:inline;
-  width:50px;
+  width:100px;
 }
 
 .react-tangle-input:focus {

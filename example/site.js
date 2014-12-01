@@ -4,17 +4,14 @@ var TangleText = require('../'),
 
 var Example = React.createClass({
   getInitialState: function() {
-    return { value: 0, valueTwo: 0 };
+    return { value1: 0, value2: 0 };
   },
-  onChange: function(value) {
-    console.log('onChange one', value);
-    this.setState({ value: value });
+  onChange1: function(value) {
+      console.log(value);
+    this.setState({ value1: value });
   },
-  onInput: function(value) {
-    console.log('onInput one', value);
-  },
-  onChangeTwo: function(value) {
-    this.setState({ valueTwo: value });
+  onChange2: function(value) {
+    this.setState({ value2: value });
   },
   render: function() {
     /* jshint ignore:start */
@@ -22,8 +19,8 @@ var Example = React.createClass({
       <div>
         <div className='clearfix pad1 keyline-bottom'>
           <div className='col4'>
-            <TangleText value={this.state.valueTwo} onInput={this.onInput} onChange={this.onChangeTwo} />
-            <TangleText value={this.state.value} onChange={this.onChange}
+            <TangleText value={this.state.value1} onChange={this.onChange1} />
+            <TangleText value={this.state.value2} onChange={this.onChange2}
               min={0} max={1} step={0.02} />
           </div>
           <div className='col8'>
