@@ -6,6 +6,7 @@ var TangleTextCompat = React.createClass({
     value: React.PropTypes.number.isRequired,
 
     onFocus: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
     format: React.PropTypes.func,
 
     popoverKey: React.PropTypes.string,
@@ -23,7 +24,8 @@ var TangleTextCompat = React.createClass({
       step: 1,
       className: 'react-tangle-input',
       format: function(x) { return x; },
-      onFocus: function(x) { }
+      onFocus: function(x) { },
+      onBlur: function(x) { }
     };
   },
   componentWillReceiveProps: function(nextProps) {
@@ -53,6 +55,7 @@ var TangleTextCompat = React.createClass({
       this.setState({ value: this.props.value });
     } else {
       this.props.onChange(this.bounds(parsed));
+      this.props.onBlur(this.bounds(parsed));
       this.setState({ value: this.bounds(parsed) });
     }
   },
