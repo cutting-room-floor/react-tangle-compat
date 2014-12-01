@@ -27,7 +27,7 @@ var TangleTextCompat = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({ value: nextProps.value });
+    this.setState({ value: nextProps.format(nextProps.value) });
   },
   getInitialState: function() {
     return {
@@ -90,7 +90,7 @@ var TangleTextCompat = React.createClass({
           onFocus={this.props.onFocus}
           onBlur={this.onBlur}
           data-popover={this.props.popoverKey}
-          value={this.props.format(this.state.value)} />
+          value={this.state.value} />
       </div>
     );
     /* jshint ignore:end */
