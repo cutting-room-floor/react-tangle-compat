@@ -29,7 +29,9 @@ var TangleTextCompat = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({ value: nextProps.format(nextProps.value) });
+    if (nextProps.value !== parseFloat(this.state.value)) {
+      this.setState({ value: nextProps.format(nextProps.value) });
+    }
   },
   getInitialState: function() {
     return {
